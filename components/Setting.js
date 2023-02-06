@@ -1,10 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
+import Login from "./Login";
 
 export default function Setting() {
   return (
     <View>
-      <Text>Setting</Text>
+      <Login />
     </View>
   );
 }
