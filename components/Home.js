@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +8,7 @@ import {
   Button,
   Pressable,
 } from "react-native";
+import Prompt from "./Prompt";
 
 export default function Home() {
   const DATA = [
@@ -23,9 +25,11 @@ export default function Home() {
       title: 108,
     },
   ];
+
+  const [count, setCount] = useState(DATA);
   const Item = ({ title }) => (
     <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={[styles.title, styles.textWhite]}>{title}</Text>
     </View>
   );
   return (
@@ -33,31 +37,76 @@ export default function Home() {
       <View style={styles.imgContainer}>
         <Image style={styles.image} source={require("../assets/krishna.jpg")} />
       </View>
+
       <View style={styles.chantCountContainer}>
-        <Text>How many times do you want to chant</Text>
-        <View>
-          <FlatList
-            data={DATA}
-            renderItem={({ item }) => <Item title={item.title} />}
-            keyExtractor={(item) => item.id}
-            horizontal={true}
-          />
-          <View style={{ flexDirection: "row" }}>
-            <Button title="Add Custom Count" color="#841584" />
-            <Button title="Clear Count" color="#841584" />
+        <Text style={styles.textWhite}>
+          How many times do you want to chant ?
+        </Text>
+        <FlatList
+          data={DATA}
+          renderItem={({ item }) => <Item title={item.title} />}
+          keyExtractor={(item) => item.id}
+          horizontal={true}
+        />
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View
+            style={{ backgroundColor: "green", borderRadius: 5, margin: 5 }}
+          >
+            <Button
+              title="Add Custom Count"
+              color="white"
+              onPress={() => {
+                // setTimesPressed((current) => current + 1);
+                alert("pressed");
+              }}
+            />
+          </View>
+          {/* <Pressable onPress={() => alert("pressed")}>
+            <Text style={styles.textWhite}>Add Custom Count</Text>
+          </Pressable> */}
+          <View
+            style={{ backgroundColor: "green", borderRadius: 10, margin: 5 }}
+          >
+            <Button
+              title="Clear Count"
+              color="white"
+              onPress={() => {
+                // setTimesPressed((current) => current + 1);
+                alert("pressed");
+              }}
+            />
           </View>
         </View>
       </View>
+
       <View style={styles.promptContainer}>
-        <Text>How do you want us to prompt you when japa ends</Text>
-        <View>
-          <Text>Prompt</Text>
+        <Text style={styles.textWhite}>
+          How do you want us to prompt you when japa ends ?
+        </Text>
+        <View style={styles.promptIconContainer}>
+          <Prompt text="sound" icon="bell" />
+          <Prompt text="vibrate" icon="vibrate" />
+          <Prompt text="sound & vibrate " icon="cellphone-sound" />
         </View>
       </View>
+
       <View style={styles.JapaButtonContainer}>
-        <Pressable>
+        {/* <Pressable>
           <Text>Start Japa</Text>
-        </Pressable>
+        </Pressable> */}
+
+        <View
+          style={{ backgroundColor: "white", borderRadius: 5, width: "90%" }}
+        >
+          <Button
+            title="Start Japa"
+            color="orange"
+            onPress={() => {
+              // setTimesPressed((current) => current + 1);
+              alert("pressed");
+            }}
+          />
+        </View>
       </View>
     </View>
   );
@@ -66,47 +115,61 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "orange",
   },
+
   imgContainer: {
-    flex: 1,
-    paddingTop: 50,
-    borderRadius: 100,
+    flex: 3.75,
+    padding: 5,
+    // backgroundColor: "yellow",
   },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: "cover",
+    borderRadius: 200,
+    borderWidth: 5,
+    borderColor: "white",
+  },
+
   chantCountContainer: {
-    flex: 1,
+    // backgroundColor: "red",
+    flex: 3.75,
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 150,
+    padding: 10,
   },
+
   promptContainer: {
-    flex: 1,
+    // backgroundColor: "green",
+    flex: 3,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 50,
   },
   JapaButtonContainer: {
-    flex: 1,
+    // backgroundColor: "blue",
+    flex: 2,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "green",
     width: "100%",
-  },
-  image: {
-    width: 300,
-    height: 300,
-    resizeMode: "cover",
-    borderRadius: "50%",
-    borderWidth: 5,
-    borderColor: "white",
   },
   item: {
     padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    // marginVertical: 8,
+    // marginHorizontal: 16,
   },
   title: {
-    fontSize: 32,
+    fontSize: 50,
+  },
+  textWhite: {
+    color: "white",
+  },
+  promptIconContainer: {
+    flexDirection: "row",
+    // justifyContent: "center",
   },
 });

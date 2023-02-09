@@ -14,16 +14,17 @@ import {
   View,
 } from "react-native";
 import { auth } from "../firebase";
+import Home from "./Home";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   //   const navigation = useNavigation();
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        () => navigation.navigate("Home");
+        // <Home />;
+        () => navigation.navigate(Home);
       }
     });
     return unsubscribe;
@@ -132,3 +133,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+//in react native after login how to redirect to home page using tab navigation?
