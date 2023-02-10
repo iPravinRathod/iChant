@@ -1,12 +1,12 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function Prompt({ text, icon }) {
+export default function Prompt({ text, icon, color, onPress }) {
   return (
-    <View style={styles.container}>
-      <MaterialCommunityIcons name={icon} color="white" size={50} />
-      <Text style={styles.text}>{text}</Text>
-    </View>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+      <MaterialCommunityIcons name={icon} color={color} size={50} />
+      <Text style={{ color: color }}>{text}</Text>
+    </TouchableOpacity>
   );
 }
 

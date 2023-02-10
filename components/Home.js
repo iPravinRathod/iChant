@@ -7,31 +7,70 @@ import {
   FlatList,
   Button,
   Pressable,
+  Modal,
+  TextInput,
+  TouchableOpacity,
 } from "react-native";
 import Prompt from "./Prompt";
+import React from "react";
+
+const Item = ({ item, onPress, backgroundColor, textColor }) => (
+  <TouchableOpacity
+    onPress={onPress}
+    style={[styles.item, { backgroundColor }]}
+  >
+    <Text style={[styles.title, { color: textColor }]}>{item}</Text>
+  </TouchableOpacity>
+);
 
 export default function Home() {
-  const DATA = [
-    {
-      id: 1,
-      title: 10,
-    },
-    {
-      id: 2,
-      title: 50,
-    },
-    {
-      id: 3,
-      title: 108,
-    },
-  ];
+  const [count, setCount] = useState([10, 50, 108]);
+  const [prompt, setPrompt] = useState([
+    { text: "Sound", icon: "bell" },
+    { text: "Vibrate", icon: "vibrate" },
+    { text: "Sound & Vibrate", icon: "cellphone-sound" },
+  ]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [number, onChangeNumber] = React.useState("");
+  const onAddCount = () => {
+    setCount((prevValue) => [...prevValue, number]);
+    setModalVisible(!modalVisible);
+  };
+  const [selectedItem, setSelectedItem] = useState(0);
+  const renderItem = ({ item, index }) => {
+    console.log("item " + index, selectedItem);
+    const backgroundColor = index === selectedItem ? "#6e3b6e" : "#f9c2ff";
+    const color = index === selectedItem ? "white" : "black";
+    return (
+      <Item
+        item={item}
+        onPress={() => setSelectedItem(index)}
+        // backgroundColor={backgroundColor}
+        textColor={color}
+      />
+    );
+  };
 
-  const [count, setCount] = useState(DATA);
-  const Item = ({ title }) => (
-    <View style={styles.item}>
-      <Text style={[styles.title, styles.textWhite]}>{title}</Text>
-    </View>
-  );
+  const [selectedPrompt, setSelectedPrompt] = useState(0);
+  const renderPrompt = ({ item, index }) => {
+    console.log("element " + item.text, item.icon, index, selectedPrompt);
+    const color = index === selectedPrompt ? "white" : "black";
+    return (
+      <Prompt
+        text={item.text}
+        icon={item.icon}
+        color={color}
+        onPress={() => setSelectedPrompt(index)}
+      />
+      // <Item
+      //   item={item}
+      //   onPress={() => setSelectedItem(index)}
+      //   // backgroundColor={backgroundColor}
+      //   textColor={color}
+      // />
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.imgContainer}>
@@ -43,10 +82,23 @@ export default function Home() {
           How many times do you want to chant ?
         </Text>
         <FlatList
-          data={DATA}
-          renderItem={({ item }) => <Item title={item.title} />}
-          keyExtractor={(item) => item.id}
-          horizontal={true}
+          data={count}
+          renderItem={renderItem}
+          showsHorizontalScrollIndicator={false}
+          // renderItem={(element) => {
+          //   return (
+          //     <View style={styles.item}>
+          //       <Text
+          //         style={[styles.title, styles.textWhite]}
+          //         key={element.index}
+          //       >
+          //         {element.item}
+          //       </Text>
+          //     </View>
+          //   );
+          // }}
+          horizontal
+          // extraData={selectedItem}
         />
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View
@@ -55,15 +107,9 @@ export default function Home() {
             <Button
               title="Add Custom Count"
               color="white"
-              onPress={() => {
-                // setTimesPressed((current) => current + 1);
-                alert("pressed");
-              }}
+              onPress={() => setModalVisible(true)}
             />
           </View>
-          {/* <Pressable onPress={() => alert("pressed")}>
-            <Text style={styles.textWhite}>Add Custom Count</Text>
-          </Pressable> */}
           <View
             style={{ backgroundColor: "green", borderRadius: 10, margin: 5 }}
           >
@@ -71,8 +117,7 @@ export default function Home() {
               title="Clear Count"
               color="white"
               onPress={() => {
-                // setTimesPressed((current) => current + 1);
-                alert("pressed");
+                setCount((prevValue) => [(prevValue.length = 108)]);
               }}
             />
           </View>
@@ -84,9 +129,18 @@ export default function Home() {
           How do you want us to prompt you when japa ends ?
         </Text>
         <View style={styles.promptIconContainer}>
-          <Prompt text="sound" icon="bell" />
-          <Prompt text="vibrate" icon="vibrate" />
-          <Prompt text="sound & vibrate " icon="cellphone-sound" />
+          <FlatList data={prompt} renderItem={renderPrompt} horizontal />
+          {/* <Prompt text="sound" icon="bell" onPress={() => alert("Please")} />
+          <Prompt
+            text="vibrate"
+            icon="vibrate"
+            onPress={() => setSelectedPrompt(index)}
+          />
+          <Prompt
+            text="sound & vibrate"
+            icon="cellphone-sound"
+            onPress={() => setSelectedPrompt(index)}
+          /> */}
         </View>
       </View>
 
@@ -103,10 +157,52 @@ export default function Home() {
             color="orange"
             onPress={() => {
               // setTimesPressed((current) => current + 1);
-              alert("pressed");
+              alert("Start Japa" + selectedItem);
             }}
           />
         </View>
+      </View>
+      <View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Please enter japa count</Text>
+              <TextInput
+                keyboardType="numeric"
+                style={styles.input}
+                onChangeText={onChangeNumber}
+                value={number}
+              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>Cancel</Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={onAddCount}
+                >
+                  <Text style={styles.textStyle}>Ok</Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     </View>
   );
@@ -171,5 +267,54 @@ const styles = StyleSheet.create({
   promptIconContainer: {
     flexDirection: "row",
     // justifyContent: "center",
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  input: {
+    height: 40,
+    width: 100,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });
