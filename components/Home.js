@@ -10,6 +10,7 @@ import {
   Modal,
   TextInput,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import Prompt from "./Prompt";
 import React from "react";
@@ -37,14 +38,21 @@ export default function Home() {
     setModalVisible(!modalVisible);
   };
   const [selectedItem, setSelectedItem] = useState(0);
+  // const [selectedItemValue, setSelectedItemValue] = useState("pk");
+  // console.log("selectedItemValue " + selectedItemValue);
+
   const renderItem = ({ item, index }) => {
-    console.log("item " + index, selectedItem);
+    console.log("item " + index, selectedItem, item);
     const backgroundColor = index === selectedItem ? "#6e3b6e" : "#f9c2ff";
     const color = index === selectedItem ? "white" : "black";
+
     return (
       <Item
         item={item}
-        onPress={() => setSelectedItem(index)}
+        onPress={() => {
+          setSelectedItem(index);
+          // setSelectedItemValue(item);
+        }}
         // backgroundColor={backgroundColor}
         textColor={color}
       />
@@ -53,7 +61,7 @@ export default function Home() {
 
   const [selectedPrompt, setSelectedPrompt] = useState(0);
   const renderPrompt = ({ item, index }) => {
-    console.log("element " + item.text, item.icon, index, selectedPrompt);
+    // console.log("element " + item.text, item.icon, index, selectedPrompt);
     const color = index === selectedPrompt ? "white" : "black";
     return (
       <Prompt
@@ -85,20 +93,7 @@ export default function Home() {
           data={count}
           renderItem={renderItem}
           showsHorizontalScrollIndicator={false}
-          // renderItem={(element) => {
-          //   return (
-          //     <View style={styles.item}>
-          //       <Text
-          //         style={[styles.title, styles.textWhite]}
-          //         key={element.index}
-          //       >
-          //         {element.item}
-          //       </Text>
-          //     </View>
-          //   );
-          // }}
           horizontal
-          // extraData={selectedItem}
         />
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View
@@ -130,25 +125,10 @@ export default function Home() {
         </Text>
         <View style={styles.promptIconContainer}>
           <FlatList data={prompt} renderItem={renderPrompt} horizontal />
-          {/* <Prompt text="sound" icon="bell" onPress={() => alert("Please")} />
-          <Prompt
-            text="vibrate"
-            icon="vibrate"
-            onPress={() => setSelectedPrompt(index)}
-          />
-          <Prompt
-            text="sound & vibrate"
-            icon="cellphone-sound"
-            onPress={() => setSelectedPrompt(index)}
-          /> */}
         </View>
       </View>
 
       <View style={styles.JapaButtonContainer}>
-        {/* <Pressable>
-          <Text>Start Japa</Text>
-        </Pressable> */}
-
         <View
           style={{ backgroundColor: "white", borderRadius: 5, width: "90%" }}
         >
@@ -156,7 +136,6 @@ export default function Home() {
             title="Start Japa"
             color="orange"
             onPress={() => {
-              // setTimesPressed((current) => current + 1);
               alert("Start Japa" + selectedItem);
             }}
           />
